@@ -1,0 +1,11 @@
+ pip install nbmerge
+ pip install nbconvert
+ # requirements für nbconvert: pandoc und latex distro (z.b texlive)
+ sudo apt install pandoc
+
+ # merge the notebooks:
+ nbmerge diamond_prices.ipynb cell_data_segmentation.ipynb > ML-A1-Group3.ipynb
+
+ # convert merged notebook to pdf => execute all cells before export!
+ jupyter nbconvert --to pdf ML-A1-Group3.ipynb
+
