@@ -8,7 +8,10 @@ from tekore import Credentials, RefreshingCredentials, Spotify
 
 
 class SingleUseAuthServer:
-    def __init__(self, host: str, port: int, spotify: Spotify, credentials: Union[Credentials, RefreshingCredentials]):
+    def __init__(self, host: str,
+                 port: int,
+                 spotify: Spotify,
+                 credentials: Union[Credentials, RefreshingCredentials]):
         self.auths = {}  # Ongoing authorisations: state -> UserAuth
         self.users = {}  # User tokens: state -> token (use state as a user ID)
         self.login_msg = f'You can <a href="/login">login</a>'
