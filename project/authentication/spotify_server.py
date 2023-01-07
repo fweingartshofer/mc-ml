@@ -7,7 +7,7 @@ from flask import session, Flask, redirect, request
 from tekore import Credentials, RefreshingCredentials, Spotify
 
 
-class SingleUseAuthServer:
+class SpotifyServer:
     def __init__(self, host: str,
                  port: int,
                  spotify: Spotify,
