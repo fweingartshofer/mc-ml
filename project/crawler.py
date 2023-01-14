@@ -1,7 +1,6 @@
 import tekore as tk
 from dotenv import load_dotenv
 import httpx
-from os import environ as env
 import json
 
 from google.cloud.firestore_v1 import Client
@@ -67,7 +66,8 @@ class Crawler:
         analyzed_tracks = self._analyze_tracks(tracks)
         self._save_tracks(analyzed_tracks)
 
-    def _save_tracks(self, analyzed_tracks):
+    @staticmethod
+    def _save_tracks(analyzed_tracks):
         print("Saving tracks ...")
         client: Client = firestore.client()
         analyzed_tracks.upsert(client.collection("tracks"))
