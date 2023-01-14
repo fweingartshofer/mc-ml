@@ -24,18 +24,22 @@ class LastFmScraper:
 class LastFmProxy:
     network: LastFMNetwork
     scraper: LastFmScraper
+    scraper_only: bool
 
-    def __init__(self, network: LastFMNetwork, scraper: LastFmScraper):
+    def __init__(self, network: LastFMNetwork, scraper: LastFmScraper, scraper_only: bool = False):
         self.network = network
         self.scraper = scraper
+        self.scraper_only = scraper_only
 
     def get_tags(self, artist: str, track: str) -> Set[str]:
+        scrapped_tags = self.scraper.get_tags(artist, track)
+        if self.scraper_only:
+            return scrapped_tags
         try:
             tags = self._get_tags_with_network(artist, track)
         except:
             logging.debug(f"Track '{track}' from {artist} not found")
             tags = set()
-        scrapped_tags = self.scraper.get_tags(artist, track)
         return tags.union(scrapped_tags)
 
     def _get_tags_with_network(self, artist: str, track: str) -> Set[str]:
