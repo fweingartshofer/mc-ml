@@ -1,4 +1,5 @@
 .env
+.spotify_credentials.json
 service_account.json
 
 # Created by https://www.toptal.com/developers/gitignore/api/venv,linux,windows,pycharm+all,jupyternotebooks
