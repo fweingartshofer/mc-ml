@@ -32,6 +32,18 @@ class AnalyzedTrack:
     artist_genres: Set[str]
     artist_names: List[str]
     tags: Set[str]
+    acousticness: float
+    pitches: dict
+    energy: float
+    danceability: float
+    mode: int
+    instrumentalness: float
+    key: int
+    liveness: float
+    loudness: float
+    tempo: float
+    time_signature: int
+    valence: float
 
     def __init__(self,
                  full_track: FullTrack,
@@ -54,7 +66,19 @@ class AnalyzedTrack:
         return f"AnalyzedTrack(id={self.id}, " \
                + f"name={self.name}, " \
                + f"duration={self.duration}, " \
-               + f"artist_genres={self.artist_genres})"
+               + f"artist_genres={self.artist_genres}, " \
+               + f"acousticness={self.acousticness}, " \
+               + f"pitches={self.pitches}, " \
+               + f"energy={self.energy}, " \
+               + f"danceability={self.danceability}, " \
+               + f"mode={self.mode}, " \
+               + f"instrumentalness={self.instrumentalness}, " \
+               + f"key={self.key}, " \
+               + f"liveness={self.liveness}, " \
+               + f"loudness={self.loudness}, " \
+               + f"tempo={self.tempo}, " \
+               + f"time_signature={self.time_signature}, " \
+               + f"valence={self.valence} )"
 
 
 class AnalyzedTracks:
