@@ -65,6 +65,7 @@ class AnalyzedTrack:
     def __repr__(self):
         return f"AnalyzedTrack(id={self.id}, " \
                + f"name={self.name}, " \
+               + f"tags={self.tags}, " \
                + f"duration={self.duration}, " \
                + f"artist_genres={self.artist_genres}, " \
                + f"acousticness={self.acousticness}, " \
