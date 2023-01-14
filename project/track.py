@@ -39,9 +39,9 @@ class AnalyzedTrack:
         self.id = full_track.id
         self.name = full_track.name
         self.duration = full_track.duration_ms
-        self.artist_genres = set([genre for artist in artists
-                                  for genre in artist.genres])
-        self.artist_names = [artist.name for artist in artists]
+        self.artist_genres = {genre for artist in artists
+                              for genre in artist.genres}
+        self.artist_names = list({artist.name for artist in artists})
 
     def upsert(self, collection: CollectionReference):
         doc_ref: DocumentReference = collection.document(self.id)
