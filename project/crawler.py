@@ -9,7 +9,9 @@ from tekore import Spotify, Credentials
 
 from authentication.spotify_server import SpotifyServer
 from typing import List
-from project.random_track import RandomTrack
+
+from project.playlist_tracks import PlaylistTracks
+from project.random_tracks import RandomTracks
 from project.util import Partition
 import pylast
 from authentication.lastfm_credentials import LastFmCredentials
@@ -52,18 +54,33 @@ class Crawler:
         self._set_spotify_credentials()
         self._store_spotify_credentials()
 
-    def collect_tracks(self, amount: int):
+    def collect_tracks_from_playlist(self, playlist_id: str):
         self._spotify.token = self._cred.refresh(self._spotify.token)
+        track_generator = self._retrieve_playlist_tracks(playlist_id)
+
+        for tracks in track_generator:
+            analyzed_tracks = self._analyze_tracks(tracks)
+            self._save_tracks(analyzed_tracks)
+
+    def collect_random_tracks(self):
         tracks = self._retrieve_random_tracks()
+        analyzed_tracks = self._analyze_tracks(tracks)
+        self._save_tracks(analyzed_tracks)
+
+    def _save_tracks(self, analyzed_tracks):
+        print("Saving tracks ...")
+        client: Client = firestore.client()
+        analyzed_tracks.upsert(client.collection("tracks"))
+
+    def _analyze_tracks(self, tracks) -> model.AnalyzedTracks:
+        print("Analyzing", len(tracks), "tracks ...")
         artists = self._retrieve_artists(tracks)
 
-        for i in range(0, amount // 50):
-            analyzed_tracks = model.AnalyzedTracks(tracks, artists)
-            self._retrieve_tags(analyzed_tracks.tracks)
-            self._enrich_tracks(analyzed_tracks.tracks)
+        analyzed_tracks = model.AnalyzedTracks(tracks, artists)
+        self._retrieve_tags(analyzed_tracks.tracks)
+        self._enrich_tracks(analyzed_tracks.tracks)
 
-            client: Client = firestore.client()
-            analyzed_tracks.upsert(client.collection("tracks"))
+        return analyzed_tracks
 
     def _set_spotify_credentials(self):
         try:
@@ -95,8 +112,8 @@ class Crawler:
             outfile.write(json_object)
 
     def _retrieve_random_tracks(self):
-        random_track = RandomTrack(self._spotify, self._cred)
-        return random_track.random_tracks()
+        random_tracks = RandomTracks(self._spotify, self._cred)
+        return random_tracks.random_tracks()
 
     def _retrieve_artists(self, tracks):
         artist_ids = [artist.id for track in tracks for artist in track.artists]
@@ -130,9 +147,9 @@ class Crawler:
                     analysis = self._spotify.track_audio_analysis(track_id=track.id)
                     successful = True
                 except httpx.HTTPError:
-                    print('Error while fetching audio analysis.')
+                    print("Retry of audio analysis for track", track.id, "necessary.")
                     successful = False
-                    sleep(3)
+                    sleep(4)
 
             feature = [feature for feature in features if feature.id == track.id][0]
             track.acousticness = feature.acousticness
@@ -147,3 +164,7 @@ class Crawler:
             track.tempo = feature.tempo
             track.time_signature = feature.time_signature
             track.valence = feature.valence
+
+    def _retrieve_playlist_tracks(self, playlist_id: str):
+        playlist_tracks = PlaylistTracks(self._spotify, self._cred)
+        return playlist_tracks.playlist_tracks(playlist_id)

@@ -5,7 +5,7 @@ from tekore import Spotify, Credentials, RefreshingCredentials
 from tekore._model import FullTrack
 
 
-class RandomTrack:
+class RandomTracks:
     def __init__(self, spotify: Spotify, credentials: Union[Credentials, RefreshingCredentials]):
         self.spotify = spotify
         self.credentials = credentials
