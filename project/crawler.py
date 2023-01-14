@@ -38,7 +38,7 @@ class Crawler:
         conf = tk.config_from_environment()
         self._cred = tk.Credentials(*conf)
 
-        creds = LastFmCredentials(env["LASTFM_API_KEY"], env["LASTFM_SHARED_SECRET"])
+        creds = LastFmCredentials()
 
         self._spotify = tk.Spotify()
         last_network = pylast.LastFMNetwork(
@@ -49,7 +49,7 @@ class Crawler:
         self._lastfm = LastFmProxy(last_network, LastFmScraper())
         firebase_admin.initialize_app()
 
-        self._set_credentials()
+        self._set_spotify_credentials()
         self._store_spotify_credentials()
 
     def collect_tracks(self, amount: int):
@@ -65,7 +65,7 @@ class Crawler:
             client: Client = firestore.client()
             analyzed_tracks.upsert(client.collection("tracks"))
 
-    def _set_credentials(self):
+    def _set_spotify_credentials(self):
         try:
             with open(".spotify_credentials.json", "r") as infile:
                 token_dict = json.load(infile)
