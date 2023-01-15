@@ -22,6 +22,21 @@ import firebase_admin
 from firebase_admin import firestore
 
 
+def refresh_token(func):
+    """
+    Decorator that refreshes the spotify token
+    """
+
+    def wrap(*args, **kwargs):
+        self: Crawler = args[0]
+        self._spotify.token = self._cred.refresh(self._spotify.token)
+        print("refreshing spotify credentials at", func.__name__)
+        result = func(*args, **kwargs)
+        return result
+
+    return wrap
+
+
 class Crawler:
     _host: str
     _port: int
@@ -133,6 +148,7 @@ class Crawler:
                 continue
             track.tags = tags
 
+    @refresh_token
     def _enrich_tracks(self, tracks):
         track_ids = [track.id for track in tracks]
         track_id_partitions = Partition(track_ids)
@@ -165,6 +181,7 @@ class Crawler:
             track.time_signature = feature.time_signature
             track.valence = feature.valence
 
+    @refresh_token
     def _retrieve_playlist_tracks(self, playlist_id: str):
         playlist_tracks = PlaylistTracks(self._spotify, self._cred)
         return playlist_tracks.playlist_tracks(playlist_id)
