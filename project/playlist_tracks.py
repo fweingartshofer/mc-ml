@@ -13,10 +13,11 @@ class PlaylistTracks:
         self.credentials = credentials
 
     def playlist_tracks(self, playlist_id: str):
-        offset = 0
+        offset = 1400
         completed = False
 
         while not completed:
+            print('loading playlist', playlist_id, 'offset:', offset)
             try:
                 playlist_page: Union[PlaylistTrackPaging, dict] = self.spotify.playlist_items(
                     playlist_id=playlist_id,
