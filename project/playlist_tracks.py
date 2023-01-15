@@ -13,7 +13,7 @@ class PlaylistTracks:
         self.credentials = credentials
 
     def playlist_tracks(self, playlist_id: str):
-        offset = 1400
+        offset = 0
         completed = False
 
         while not completed:
