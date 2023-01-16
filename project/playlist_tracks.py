@@ -12,9 +12,9 @@ class PlaylistTracks:
         self.spotify = spotify
         self.credentials = credentials
 
-    def playlist_tracks(self, playlist_id: str):
-        offset = 0
+    def playlist_tracks(self, playlist_id: str, offset: int = 0):
         completed = False
+        limit = 50
 
         while not completed:
             print('loading playlist', playlist_id, 'offset:', offset)
@@ -30,9 +30,9 @@ class PlaylistTracks:
                     yield [item.track for item in playlist_page.items]
                     completed = False
 
-                offset += 50
-            except httpx.HTTPError:
-                print('Error while fetching audio analysis.')
+                offset += limit
+            except Exception as e:
+                print('Error while fetching playlist tracks: ', e)
                 completed = False
                 sleep(3)
 
