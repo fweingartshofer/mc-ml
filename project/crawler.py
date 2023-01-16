@@ -1,5 +1,6 @@
 import os
 
+import certifi
 import tekore as tk
 from dotenv import load_dotenv
 import httpx
@@ -75,6 +76,7 @@ class Crawler:
         mongo_certificate = os.environ.get("MONGO_CERTIFICATE")
         client = MongoClient(mongo_uri,
                              tls=True,
+                             tlsCAFile=certifi.where(),
                              tlsCertificateKeyFile=mongo_certificate,
                              server_api=ServerApi('1'))
         db = client['spotifai']
@@ -218,4 +220,4 @@ class Crawler:
 
 if __name__ == "__main__":
     crawler = Crawler("127.0.0.1", 5000)
-    crawler.collect_tracks_from_playlist("1C49yxU1XBkoq5yaVDbJwx", offset=4500)
+    crawler.collect_tracks_from_playlist("69fEt9DN5r4JQATi52sRtq")
