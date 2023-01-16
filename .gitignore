@@ -1,4 +1,5 @@
 .env
+X509.pem
 .spotify_credentials.json
 service_account.json
 
