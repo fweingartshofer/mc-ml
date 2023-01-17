@@ -1,10 +1,9 @@
-import random
 from time import sleep
-from typing import Union, List
+from typing import Union
 
-import httpx
 from tekore import Spotify, Credentials, RefreshingCredentials
-from tekore._model import FullPlaylistTrack, PlaylistTrackPaging
+from tekore.model import FullPlaylistTrack
+from tekore.model import PlaylistTrackPaging
 
 
 class PlaylistTracks:
@@ -27,7 +26,7 @@ class PlaylistTracks:
                 if len(playlist_page.items) == 0:
                     completed = True
                 else:
-                    yield [item.track for item in playlist_page.items]
+                    yield [item.track for item in playlist_page.items if isinstance(item.track, FullPlaylistTrack)]
                     completed = False
 
                 offset += limit

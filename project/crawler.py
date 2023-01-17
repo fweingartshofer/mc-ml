@@ -143,7 +143,8 @@ class Crawler:
         return random_tracks.random_tracks()
 
     def _retrieve_artists(self, tracks):
-        artist_ids = [artist.id for track in tracks for artist in track.artists]
+        artist_ids = [artist.id for track in tracks
+                      for artist in track.artists]
         artist_id_partitions = Partition(artist_ids)
         pending = True
         while pending:
@@ -220,4 +221,4 @@ class Crawler:
 
 if __name__ == "__main__":
     crawler = Crawler("127.0.0.1", 5000)
-    crawler.collect_tracks_from_playlist("69fEt9DN5r4JQATi52sRtq")
+    crawler.collect_tracks_from_playlist("12lTXPwncnqaRTOs4Wsdzx", offset=100)
