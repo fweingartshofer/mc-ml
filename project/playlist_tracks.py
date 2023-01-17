@@ -22,7 +22,7 @@ class PlaylistTracks:
                 playlist_page: Union[PlaylistTrackPaging, dict] = self.spotify.playlist_items(
                     playlist_id=playlist_id,
                     offset=offset,
-                    limit=50
+                    limit=limit
                 )
                 if len(playlist_page.items) == 0:
                     completed = True

@@ -1,5 +1,6 @@
 import os
 
+import certifi
 import tekore as tk
 from dotenv import load_dotenv
 import httpx
@@ -75,6 +76,7 @@ class Crawler:
         mongo_certificate = os.environ.get("MONGO_CERTIFICATE")
         client = MongoClient(mongo_uri,
                              tls=True,
+                             tlsCAFile=certifi.where(),
                              tlsCertificateKeyFile=mongo_certificate,
                              server_api=ServerApi('1'))
         db = client['spotifai']
@@ -143,7 +145,14 @@ class Crawler:
     def _retrieve_artists(self, tracks):
         artist_ids = [artist.id for track in tracks for artist in track.artists]
         artist_id_partitions = Partition(artist_ids)
-        artists = [self._spotify.artists(ids) for ids in artist_id_partitions]
+        pending = True
+        while pending:
+            try:
+                artists = [self._spotify.artists(ids) for ids in artist_id_partitions]
+                pending = False
+            except tk.ServerError as se:
+                print("Error retrieving artists:", se)
+                pending = True
         artists = list(artist for partition in artists for artist in partition)
         return artists
 
@@ -183,7 +192,7 @@ class Crawler:
                         print("Track", track.id, "does not have audio analysis:", nf)
                     else:
                         retries_404 += 1
-                        print("Could not find analysis for", track.id, "trying again: ", retries_404 + 1, "/5")
+                        print("Could not find analysis for", track.id, "trying again: ", retries_404, "/5")
                 except TooManyRequests:
                     print("Too many requests, waiting 30s...")
                     sleep(30)
@@ -207,3 +216,8 @@ class Crawler:
     def _retrieve_playlist_tracks(self, playlist_id: str, offset: int):
         playlist_tracks = PlaylistTracks(self._spotify, self._cred)
         return playlist_tracks.playlist_tracks(playlist_id, offset)
+
+
+if __name__ == "__main__":
+    crawler = Crawler("127.0.0.1", 5000)
+    crawler.collect_tracks_from_playlist("69fEt9DN5r4JQATi52sRtq")
