@@ -199,7 +199,10 @@ class Crawler:
                     sleep(30)
             if analysis is None:
                 continue
-            feature = [feature for feature in features if feature.id == track.id][0]
+            matching_features = [feature for feature in features if feature is not None and feature.id == track.id]
+            if len(matching_features) == 0:
+                continue
+            feature = matching_features[0]
             track.acousticness = feature.acousticness
             track.pitches = {str(segment.start): [p for p in segment.pitches] for segment in analysis.segments}
             track.loudness = feature.loudness
@@ -221,4 +224,4 @@ class Crawler:
 
 if __name__ == "__main__":
     crawler = Crawler("127.0.0.1", 5000)
-    crawler.collect_tracks_from_playlist("12lTXPwncnqaRTOs4Wsdzx", offset=100)
+    crawler.collect_tracks_from_playlist("2rcMRS9fDOnuu5YUTXAcQZ")
