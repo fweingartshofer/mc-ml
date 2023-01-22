@@ -51,11 +51,16 @@ image::doc/images/training/problems/massive-target-inbalance.png[{half-width}]
 Although we had over `10.000` songs, we also had `4941` tags i.e. `4941` targets.
 Which essentially means we either have too many tags or not enough songs.
 
+It also didn't help, that some genres had multiple different naming schemes like `hip-hop` and`hip-hop`
+
 ==== Solution
 
 We decided to try and resolve this by restricting our targets to the `top 10` appearing genres and wrap aggregate all other genres into a `misc` genre.
 
-This was done by preprocessing the tags in our `mongoDB` and providing a view to download them.
+This was done by preprocessing the tags in our `mongoDB` and providing a view to download them. We also added some more songs.
+
+.top 10 genres
+image::doc/images/training/problems/aggregated-targets[]
 
 === Training
 
@@ -66,7 +71,7 @@ For the training of our tuned tags, we decided to use the following models and c
 * ensemble.ExtraTreesClassifier
 * neural_network.MLPClassifier
 
-==== Setup
+==== Feature Preprocessing
 
 Like always, before we start training, we create a _held-back test set_ to use as a safety line and to perform the final evaluation of our model. +
 However, before we can create the held-back test set, we need to use the `MultilabelBinarizer` to transform our targets (genre tags) into numerical values so that the models can work with them. +
@@ -116,6 +121,11 @@ for i in range(y.shape[1]):
     class_weights_list.append(dict(zip(np.unique(label_column), class_weights)))
 class_weights_list
 ----
+
+==== Feature Selection
+
+Some models can't effectively use 1241 features, so for them, we need to reduce the amount of features. +
+Other models like MLP however can use all features, so we do not throw away the other features
 
 ==== KNeighborsClassifier
 
