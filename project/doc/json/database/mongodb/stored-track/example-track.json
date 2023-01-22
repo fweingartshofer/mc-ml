@@ -1,0 +1,74 @@
+{
+    "_id": {
+      "$oid": "63c52ec37d1543909c21dcbf"
+    },
+    "id": "0Ed7MeXx64f6OcIuoTRCg1",
+    "name": "Xxplosive",
+    "duration": 215200,
+    "artist_genres": [
+      "west coast rap",
+      "hip hop",
+      "rap",
+      "gangster rap",
+      "g funk",
+      "hardcore hip hop",
+      "pop rap"
+    ],
+    "artist_names": [
+      "Dr. Dre",
+      "Hittman",
+      "Kurupt",
+      "Nate Dogg",
+      "Six-Two"
+    ],
+    "tags": [
+      "hip-hop",
+      "gangsta rap",
+      "west coast rap",
+      "hip hop",
+      "rap",
+      "west coast"
+    ],
+    "acousticness": 0.176,
+    "pitches": {
+      "0.0": [
+        0.159,
+        0.09,
+        0.065,
+        0.047,
+        0.099,
+        0.152,
+        0.087,
+        0.064,
+        0.107,
+        0.355,
+        1,
+        0.396
+      ],
+      "0.20889": [
+        0.778,
+        0.258,
+        0.125,
+        0.137,
+        0.176,
+        0.148,
+        0.121,
+        0.096,
+        0.108,
+        0.204,
+        1,
+        0.506
+      ],
+      ...
+    },
+    "loudness": -4.361,
+    "energy": 0.88,
+    "danceability": 0.765,
+    "mode": 1,
+    "instrumentalness": 0.00001,
+    "key": 1,
+    "liveness": 0.139,
+    "tempo": 168.96,
+    "time_signature": 4,
+    "valence": 0.929
+  }
