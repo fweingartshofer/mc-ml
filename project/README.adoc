@@ -141,6 +141,17 @@ This is a chart of the different tags with the dancebility feature.
 
 image::doc/images/visualization/dancebility.png[{half-width}]
 
+Average pitches and correlation matrix for rock.
+
+image::doc/images/visualization/average_pitches_rock.png[{half-width}]
+
+image::doc/images/visualization/correlation_matrix.png[{half-width}]
+
+Average pitches for multiple genres.
+For example metal is very distinguishable when looking at the c pitch.
+
+image::doc/images/visualization/average_pitches.png[{half-width}]
+
 == Model Training
 
 === Problems in first iteration
