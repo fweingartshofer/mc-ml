@@ -24,7 +24,7 @@ But instead the spotify api provides different kinds of features which can be us
 From last.fm it is possible to get the appropriate genres of a track.
 We can use these genres as our target labels for our tracks.
 
-== Data Gathering
+== Data gathering
 
 We use following features from the spotify api:
 
@@ -93,11 +93,53 @@ def get_tags(self, artist: str, track: str) -> Set[str]:
 
 The data itself gets saved in an MongoDB atlas database to make it available for all team members.
 
+== Database
+
+=== Firebase
+
+At first the document store Firebase was used to save the tracks.
+Firebase didn't scale with our data model, for example the nested documents.
+It got very laggy and crashed several times. So we had to switch to another Database Provider.
+
+=== MongoDB
+
+Now we are using MongoDB. There are also some drawbacks to it. We gathered to many data and had to use the paid version.
+Fortunately MongoDB offers 50 dollars for free if you are a student. We are using them now to store our data.
+Furthermore, are the views, we need for our project outdated, but we use them anyway.
+
+==== Stored Track
+
+[source,json]
+----
+include::doc/json/database/mongodb/stored-track/example-track.json[]
+----
+
+==== Aggregations
+
+We created some aggregations in MongoDB. One reason is just for our understanding.
+The other is to test and build the aggregations and use them later on to filter the tags.
+
+===== Limited-Tags-Aggregation
+
+We built a massive aggregation to edit the tags of the songs. We had to limit the tags and tag the others as misc,
+because the model training didn't work with the huge number of tags before.
+We decided to only use less than 20 tags and consider the rest as miscellaneous to get nearly good results.
+Then we also had to delete all the duplicated misc tags per song to work with it.
+An example track after the aggregation is shown in the image below.
+
+image::doc/images/database/mongodb/aggregations/aggr-limited-tags.png[{half-width}]
+
+==== Top-Ten-Tags-Aggregation
+
+Another aggregation is the one where we query the top ten tags. We use them and the misc tag as our target labels.
+
+image::doc/images/database/mongodb/aggregations/aggr-top-ten-tags.png[{half-width}]
+
 == Data preprocessing
 
-== Data Visualization
+== Data visualization
 
-== Model Training
+== Model training
 
 === Problems in first iteration
 
