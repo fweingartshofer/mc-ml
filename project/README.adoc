@@ -1,0 +1,18 @@
+﻿:author: Fabian Haas, Lea Schwarz, Andreas Wenzelhuemer, Florian Weingartshofer
+:listing-caption: Listing
+:source-highlighter: rouge
+// path to the directory containing the source code
+:src: ../
+
+:toc:
+:numbered:
+:toclevels: 3
+:rouge-style: github
+:pdf-themesdir: ./doc/theme
+:pdf-theme: basic
+:pdf-fontsdir: ./doc/fonts
+// front-cover-image can be used to include the Exercise specification, for example:
+//:front-cover-image: ./Exercise1.pdf
+
+= SpotifAI - A spotify genre guesser
+
