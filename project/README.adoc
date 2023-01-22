@@ -95,7 +95,51 @@ The data itself gets saved in an MongoDB atlas database to make it available for
 
 == Data preprocessing
 
+Initially the pitches have different lengths depending on the track length and the size of the segments.
+We need to unify all pitches to the same lengths and reduce the frequency.
+
+[source, python]
+----
+df["pitches"] = pitches
+for sym in pitch_symbol:
+    df.insert(len(df.columns), f"{sym}_max", [max_of_pitches(item, sym) for item in df["pitches"]])
+    df.insert(len(df.columns), f"{sym}_min", [min_of_pitches(item, sym) for item in df["pitches"]])
+temp_df = pd.DataFrame()
+
+for index, row in enumerate(df["pitches"].values):
+    song = pitches_to_dataframe(row)
+    song["timestamp"] = song["timestamp"].apply(pd.to_timedelta, unit='s')
+    resampled: pd.DataFrame = song.set_index("timestamp").resample(
+        f"{song.iloc[-1]['timestamp'].total_seconds() * 10 // 1}ms").mean().interpolate()[:100]
+    d: pd.DataFrame = pd.DataFrame()
+    for col in resampled.columns:
+        if col == "timestamp":
+            continue
+        d = pd.concat([d, pd.DataFrame({f"{col}_{row_idx}": [val] for row_idx, val in enumerate(resampled[col].values)},
+                                       index=[df.index[index]])], axis=1)
+    temp_df = pd.concat([temp_df, d])
+
+df = pd.concat([df, temp_df], axis=1)
+df.drop(columns=["pitches"], inplace=True)  # drop unprocessed pitches
+----
+
+Additionally, the number of tags need to get reduced.
+Otherwise, we have way too many targets for our machine learning models.
+That's why we only used the top 10 genres of our data and set all other tags to misc.
+
 == Data Visualization
+
+Here you can see the distribution of our top 10 genres.
+
+image::doc/images/visualization/top10_tags.png[{half-width}]
+
+These are our different artist genres.
+
+image::doc/images/visualization/songs_per_artist_genre.png[{half-width}]
+
+This is a chart of the different tags with the dancebility feature.
+
+image::doc/images/visualization/dancebility.png[{half-width}]
 
 == Model Training
 
