@@ -19,7 +19,79 @@
 
 == Introduction
 
+Spotify itself doesn't provide genres for a particular track, only for artists.
+But instead the spotify api provides different kinds of features which can be used for machine learning.
+From last.fm it is possible to get the appropriate genres of a track.
+We can use these genres as our target labels for our tracks.
+
 == Data Gathering
+
+We use following features from the spotify api:
+
+- name: Name of the track
+- duration: Track length in ms
+- artist_genres: Artist genres
+- acousticness: Confidence measure from 0.0 to 1.0 of whether the track is acoustic
+- pitches: dominance of every pitch
+- loudness: overall loudness in dB
+- energy: perceptual measure of intensity and activity
+- dancebility: How suitable a track is for dancing
+- mode: Modality (Major or minor) of a track
+- instrumentalness: Precision whether a track contains vocals
+- key: Pitches using standard pitch class notation
+- liveness: Presence of audience in the recording
+- temp: estimated bpm
+- time_signature: How many beats are in each bar
+- valence: Musical positiveness
+
+The first approach was to fetch songs via the search function of the api.
+Problem is the results are limited to a few popular tracks.
+The next approach was to use some large spotify playlists where all genres where included.
+The loading needs to be paged because only 50 tracks can be loaded at once.
+
+[source, python]
+----
+def playlist_tracks(self, playlist_id: str, offset: int = 0):
+    completed = False
+    limit = 50
+
+    while not completed:
+        print('loading playlist', playlist_id, 'offset:', offset)
+        try:
+            playlist_page: Union[PlaylistTrackPaging, dict] = self.spotify.playlist_items(
+                playlist_id=playlist_id,
+                offset=offset,
+                limit=limit
+            )
+            if len(playlist_page.items) == 0:
+                completed = True
+            else:
+                yield [item.track for item in playlist_page.items if isinstance(item.track, FullPlaylistTrack)]
+                completed = False
+
+            offset += limit
+        except Exception as e:
+            print('Error while fetching playlist tracks: ', e)
+            completed = False
+            sleep(3)
+
+----
+
+The genres itself get scraped from last.fm because the api provides inconsistent results.
+
+[source, python]
+----
+def get_tags(self, artist: str, track: str) -> Set[str]:
+    artist = urllib.parse.quote(artist)
+    track = urllib.parse.quote(track)
+    url = f"https://www.last.fm/music/{artist}/_/{track}/+tags"
+    r = requests.get(url)
+    tags_html = BeautifulSoup(r.content, features="html.parser")
+    tag_links = tags_html.find_all("a", href=True)
+    return {t.text for t in tag_links if t["href"].startswith("/tag/") and t.text != ""}
+----
+
+The data itself gets saved in an MongoDB atlas database to make it available for all team members.
 
 == Data preprocessing
 
