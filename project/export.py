@@ -37,7 +37,7 @@ def tracks(collection: Collection, offset=0, limit=400):
                 .skip(offset)\
                 .limit(limit)
             current_track_data = [doc for doc in docs]
-            loading = len(current_track_data) < limit
+            loading = len(current_track_data) != 0
             yield current_track_data
             offset += limit
     except Exception as e:
