@@ -24,8 +24,14 @@ db = client['spotifai']
 track_collection = db["preprocessed_tracks"]
 
 pitch_symbol = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
-tolower = lambda s: s.lower()
-flatmap = lambda list_of_lists: [item for l in list_of_lists for item in l]
+
+
+def tolower(s: str):
+    return s.lower()
+
+
+def flatmap(list_of_lists):
+    return [item for inner_list in list_of_lists for item in inner_list]
 
 
 def tracks(collection: Collection, offset=0, limit=400):
@@ -69,7 +75,11 @@ def min_of_pitches(freq: List[Dict[str, float]], pitch: chr):
 if __name__ == "__main__":
     for tracks in tracks(track_collection):
         df = pd.DataFrame(tracks)
-        df.set_index("_id", inplace=True)
+        try:
+            df.set_index("_id", inplace=True)
+        except KeyError:
+            print("Done")
+            continue
         df = df[~df["pitches"].isna()]
         tags = pd.Series(flatmap(df[~df["tags"].isna()]["tags"].values.tolist())).apply(tolower).drop_duplicates()
         pitches = df["pitches"].apply(pitch_trans)
