@@ -441,22 +441,31 @@ NOTE: : The class weights list are the ratios in which each class occurs
 
 ==== MultilayerPerceptronClassifier
 
-The last model we tried was the `MLPClassifier`.
+The MLP classifier was tested in  following configurations, the best parameters are marked bold in the table:
 
-.MLPClassifier
-[source, python]
-----
-from sklearn.neural_network import MLPClassifier
+.GridSearchCV for MLPClassifier
+[cols="2,1,1,1,1,1,1"]
+|===
+^|Parameter 6+^|Values
 
-param_grid = {
-    'hidden_layer_sizes': [(150,150,150), (100,100,100), (150,200,150)],
-    'activation': ['relu', 'tanh'],
-    'solver': ['adam', 'lbfgs'],
-    'learning_rate_init': [0.01, 0.001, 0.0001],
-}
-mlp = GridSearchCV(MLPClassifier(max_iter=1000), param_grid, cv=5)
-mlp.fit(X_train, y_train)
-mlp.best_params_
-----
+^|*hidden_layer_sizes*
+2+^|`(150,150,150)`
+2+^|`(100,100,100)`
+2+^|`(150,200,150)`
+
+^|*activation*
+3+^|`relu`
+3+^|`tanh`
+
+^|*solver*
+3+^|`adam`
+3+^|`lbfgs`
+
+^|*learning_rate_init*
+2+^|`0.01`
+2+^|`0.001`
+2+^|`0.0001`
+
+|===
 
 === Results
