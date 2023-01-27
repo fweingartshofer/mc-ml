@@ -96,7 +96,7 @@ caption:
   font_color: #007599
   font_size: 10
 literal:
-  font_color: #e5892d
+  font_color: #000
   font_family: Jetbrains Mono
 code:
   font_family: Jetbrains Mono
