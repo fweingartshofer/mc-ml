@@ -271,10 +271,95 @@ Other models like MLP however can use all features, so we do not remove the othe
 
 ==== KNeighborsClassifier
 
+.KNeighborsClassifier
+[source, python]
+----
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.model_selection import GridSearchCV
+
+knn = GridSearchCV(
+    estimator=KNeighborsClassifier(),
+    param_grid=[{
+        'weights': ['uniform', 'distance'],
+        'algorithm': ['ball_tree', 'kd_tree'],
+        'leaf_size': [1, 3],
+        'p': [1, 2, 4],
+        'metric': ['manhattan', 'cosine', 'euclidean'],
+    }],
+    n_jobs=-1
+)
+
+# Fit the pipeline to the training data
+knn.fit(X_train_pca, y_train)
+knn.best_params_
+----
+
 ==== DecisionTreeClassifier
+
+.DecisionTreeClassifier
+[source, python]
+----
+from sklearn.tree import DecisionTreeClassifier
+tree = GridSearchCV(
+    estimator=DecisionTreeClassifier(),
+    param_grid=[{
+        'criterion': ['gini'],
+        'splitter': ['best', 'random'],
+        'max_depth': [1, 2, 8, 16, 48],
+        'min_samples_leaf': [1, 10, 30],
+        'min_weight_fraction_leaf': [0.0, 0.0001, 0.0001**10],
+        'max_features': [None, 'sqrt', 'log2'],
+        'max_leaf_nodes': [None, 10, 100, 1000],
+        'min_impurity_decrease': [0.0, 0.0001, 0.0001**10],
+        'class_weight': [class_weights_list], #TODO(multilabel dict)
+        'ccp_alpha': [0.0, 0.0001, 0.0001**10]
+    }],
+    n_jobs=-1
+)
+tree.fit(X_train_pca, y_train)
+tree.best_params_
+----
 
 ==== ExtraTreesClassifier
 
+.ExtraTreesClassifier
+[source, python]
+----
+from sklearn.ensemble import ExtraTreesClassifier
+from sklearn.model_selection import GridSearchCV
+
+param_grid = {
+    'n_estimators': [100, 150, 200, 300, 400],
+    'criterion': ['gini', 'entropy', 'log_loss'],
+    'max_depth': [12, 24, 36, 48, 64],
+    'min_samples_split': [2, 8, 32],
+    'max_features': ['sqrt', 'log2', None],
+    'n_jobs': [-2],
+    'class_weight': [class_weights_list, None]
+}
+etc = GridSearchCV(ExtraTreesClassifier(random_state=42), param_grid)
+
+etc.fit(X_train_pca, y_train)
+----
+
 ==== MultilayerPerceptronClassifier
+
+The last model we tried was the `MLPClassifier`.
+
+.MLPClassifier
+[source, python]
+----
+from sklearn.neural_network import MLPClassifier
+
+param_grid = {
+    'hidden_layer_sizes': [(150,150,150), (100,100,100), (150,200,150)],
+    'activation': ['relu', 'tanh'],
+    'solver': ['adam', 'lbfgs'],
+    'learning_rate_init': [0.01, 0.001, 0.0001],
+}
+mlp = GridSearchCV(MLPClassifier(max_iter=1000), param_grid, cv=5)
+mlp.fit(X_train, y_train)
+mlp.best_params_
+----
 
 === Results
