@@ -438,6 +438,50 @@ NOTE: : The class weights list are the ratios in which each class occurs
 
 |===
 
+==== RandomForestClassifier
+
+The random forest was trained with following parameters, the bold parameters are the ones that produce the strongest model:
+
+.RandomForestClassifier Parameters
+|===
+^|Parameter 4+^|Values
+
+^|*n_estimators*
+^|*`100`*
+^|`200`
+2+^|`300`
+
+^|*max_depth*
+^|*`None`*
+^|`5`
+^|`10`
+^|`20`
+
+^|*min_samples_split*
+2+^|*`2`*
+2+^|`3`
+
+^|*min_samples_leaf*
+2+^|*`1`*
+2+^|`2`
+
+^|*max_features*
+2+^|*`sqrt`*
+2+^|`log2`
+
+|===
+
+.Performance Report
+|===
+^|Metric ^|Value
+^|Accuracy ^|38%
+^|Precision ^|99%
+^|Recall ^|64%
+^|F1-score ^|74%
+|===
+
+image::./doc/images/training/random_forest_confusion_matrix.png[]
+image::./doc/images/training/random_forest_performance_boxplot.png[]
 
 ==== MultilayerPerceptronClassifier
 
@@ -449,23 +493,36 @@ The MLP classifier was tested in  following configurations, the best parameters 
 ^|Parameter 6+^|Values
 
 ^|*hidden_layer_sizes*
-2+^|`(150,150,150)`
+2+^|*`(150,150,150)`*
 2+^|`(100,100,100)`
 2+^|`(150,200,150)`
 
 ^|*activation*
-3+^|`relu`
+3+^|*`relu`*
 3+^|`tanh`
 
 ^|*solver*
-3+^|`adam`
+3+^|*`adam`*
 3+^|`lbfgs`
 
 ^|*learning_rate_init*
 2+^|`0.01`
-2+^|`0.001`
+2+^|*`0.001`*
 2+^|`0.0001`
 
 |===
+
+.Performance Report
+|===
+^|Metric ^|Value
+^|Accuracy ^|29%
+^|Precision ^|81%
+^|Recall: ^|71%
+^|F1-score ^|70%
+
+|===
+
+image::./doc/images/training/mlp_confusion_matrix.png[]
+image::./doc/images/training/mlp_performance_boxplot.png[]
 
 === Results
