@@ -526,4 +526,6 @@ image::./doc/images/training/mlp_confusion_matrix.png[]
 image::./doc/images/training/mlp_performance_boxplot.png[]
 
 === Results
-In conclusion, the goal of this task was to see if a machine learning model could learn to recognize the genre of a song using data from both Spotify and LastFM. However, the tags from LastFM were highly unbalanced and numerous, making it necessary to select only ten of them for the model. Despite this, the data remained highly skewed and the best accuracy achieved was only around 40%. This suggests that while the model was able to learn from the data, a more balanced and representative dataset would be necessary for it to perform well on all songs on Spotify.
+In conclusion, the goal of this task was to see if a machine learning model could learn to recognize the genre of a song using data from both Spotify and LastFM. However, the tags from LastFM were highly unbalanced and numerous, making it necessary to select only ten of them for the model. Despite this, the data remained highly skewed and the best accuracy achieved was only around 40%. 
+
+This suggests that while the model was able to learn from the data, a more balanced and representative dataset would be necessary for it to perform well on all songs on Spotify.
