@@ -20,13 +20,19 @@
 == Introduction
 
 Spotify itself doesn't provide genres for a particular track, only for artists.
-But instead the spotify api provides different kinds of features which can be used for machine learning.
-From last.fm it is possible to get the appropriate genres of a track.
-We can use these genres as our target labels for our tracks.
+
+The goal of our project was to train a model that can assign genres to a spotify track.
+
+To try and achieve this, we used 2 data sources: the spotify api and last.fm api
+
+The spotify api provides different kinds of features which can be used for machine learning.
+From last.fm it is possible to get the appropriate genres of a track (these are manually labeled by users).
+
+We used the genres we got from last.fm as our target and the corresponding spotify tracks as our input.
 
 == Data Gathering
 
-We use following features from the spotify api:
+We used the following features from the spotify api:
 
 - name: Name of the track
 - duration: Track length in ms
@@ -129,9 +135,11 @@ df = pd.concat([df, temp_df], axis=1)
 df.drop(columns=["pitches"], inplace=True)  # drop unprocessed pitches
 ----
 
-Additionally, the number of tags need to get reduced.
+Additionally, the number of tags needs to be reduced.
 Otherwise, we have way too many targets for our machine learning models.
-That's why we only used the top 10 genres of our data and set all other tags to misc.
+That's why we only used the top 10 genres of our data and set all other tags to misc (as advised).
+
+To reduce bias / try to balance our data we also decided to remove the rock genre.
 
 == Data Visualization
 
@@ -147,16 +155,20 @@ This is a chart of the different tags with the dancebility feature.
 
 image::doc/images/visualization/dancebility.png[]
 
-Average pitches and correlation matrix for rock.
+Average pitches and correlation matrix for dance.
 
-image::doc/images/visualization/average_pitches_rock.png[]
+image::doc/images/visualization/average_pitches_dance.png[]
 
 image::doc/images/visualization/correlation_matrix.png[]
 
 Average pitches for multiple genres.
-For example metal is very distinguishable when looking at the c pitch.
+For example classic rock is very distinguishable when looking at the c pitch.
 
 image::doc/images/visualization/average_pitches.png[]
+
+A boxplot of some spotify features:
+
+image::doc/images/visualization/spotify-features.png[]
 
 == Model Training
 
@@ -204,6 +216,10 @@ Therefore, `rock` as standalone tag was removed, but other subgenres were kept.
 
 .top 10 genres
 image::doc/images/training/problems/aggregated-targets[]
+
+Which led to the following distribution after classifying everything apart from the top 10 and rock as misc.
+
+image::doc/images/training/problems/aggregated-targets-2.png[]
 
 === Training
 
