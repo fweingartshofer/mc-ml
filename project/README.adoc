@@ -427,7 +427,7 @@ image::doc/images/training/decision_tree_performance.png[]
 
 ==== ExtraTreesClassifier
 
-NOTE: : The class weights list are the ratios in which each class occurs
+NOTE: The class weights list are the ratios in which each class occurs
 
 .ExtraTreesClassifier Parameters
 [cols="2,1,1,1,1,1"]
@@ -471,6 +471,8 @@ NOTE: : The class weights list are the ratios in which each class occurs
 3+^|`None`
 
 |===
+
+The `ExtraTreesClassifier` took too much time to train on our own computers, so we didn't get any corresponding results. In past iterations, however, the classifier performed similar to the other models.
 
 ==== RandomForestClassifier
 
