@@ -1,10 +1,9 @@
-import random
 from time import sleep
-from typing import Union, List
+from typing import Union
 
-import httpx
 from tekore import Spotify, Credentials, RefreshingCredentials
-from tekore._model import FullPlaylistTrack, PlaylistTrackPaging
+from tekore.model import FullPlaylistTrack
+from tekore.model import PlaylistTrackPaging
 
 
 class PlaylistTracks:
@@ -12,9 +11,9 @@ class PlaylistTracks:
         self.spotify = spotify
         self.credentials = credentials
 
-    def playlist_tracks(self, playlist_id: str):
-        offset = 0
+    def playlist_tracks(self, playlist_id: str, offset: int = 0):
         completed = False
+        limit = 50
 
         while not completed:
             print('loading playlist', playlist_id, 'offset:', offset)
@@ -22,17 +21,17 @@ class PlaylistTracks:
                 playlist_page: Union[PlaylistTrackPaging, dict] = self.spotify.playlist_items(
                     playlist_id=playlist_id,
                     offset=offset,
-                    limit=50
+                    limit=limit
                 )
                 if len(playlist_page.items) == 0:
                     completed = True
                 else:
-                    yield [item.track for item in playlist_page.items]
+                    yield [item.track for item in playlist_page.items if isinstance(item.track, FullPlaylistTrack)]
                     completed = False
 
-                offset += 50
-            except httpx.HTTPError:
-                print('Error while fetching audio analysis.')
+                offset += limit
+            except Exception as e:
+                print('Error while fetching playlist tracks: ', e)
                 completed = False
                 sleep(3)
 
